@@ -1,11 +1,10 @@
 package schelper.develop
 
-import java.io.{PrintWriter, File}
-import schelper.core.{SavePosition, HideApplication, BasicForm}
-import schelper.navigate.{HomeButton, BackButton, NavigationButton, Navigable}
-import settings4scala.Settings
+import java.io._
+import schelper.core._
+import schelper.navigate._
 import schelper.core.SchelperConstants._
-import Settings._
+import schelper.core.SchelperPreferences._
 import scala.concurrent.Future
 import scala.swing._
 import scala.sys.process._
@@ -14,10 +13,10 @@ import scala.concurrent.ExecutionContext.Implicits.global
 object Compiler extends BasicForm with Navigable {
   val linkName = "Compile"
   val linkColour = SectionColour
-  val scalacField = field ("Scalac path", getFile (ApplicationName, ScalacPath).map (_.getAbsolutePath).getOrElse (""))
-  val buildField = field ("Build path", getFile (ApplicationName, BuildPath).map (_.getAbsolutePath).getOrElse (""))
-  val javaField = field ("Java path", getFile (ApplicationName, JavaPath).map (_.getAbsolutePath).getOrElse (""))
-  val appClassField = field ("App class", get (ApplicationName, AppClass).getOrElse (""))
+  val scalacField = field ("Scalac path", getString (ScalacPath).getOrElse (""))
+  val buildField = field ("Build path", getString (BuildPath).getOrElse (""))
+  val javaField = field ("Java path", getString (JavaPath).getOrElse (""))
+  val appClassField = field ("App class", getString (AppClass).getOrElse (""))
   val verboseCheck = checkbox ("Verbose", value = false)
   val saveButton = button (new BackButton ("Save paths and close", () => save (), NavigateColour))
   val trialButton = button (new HomeButton ("Trial compile", () => compile (), ActionColour))
@@ -25,11 +24,10 @@ object Compiler extends BasicForm with Navigable {
   val componentPublishers = List (saveButton, trialButton, rebuildButton)
 
   private def save () {
-    def saveFile (field: TextField, setting: String) = if (!field.text.isEmpty) putFile (ApplicationName, setting, new File (field.text))
-    def saveText (field: TextField, setting: String) = if (!field.text.isEmpty) put (ApplicationName, setting, field.text)
-    saveFile (scalacField, ScalacPath)
-    saveFile (buildField, BuildPath)
-    saveFile (javaField, JavaPath)
+    def saveText (field: TextField, setting: String) = if (!field.text.isEmpty) putString (setting, field.text)
+    saveText (scalacField, ScalacPath)
+    saveText (buildField, BuildPath)
+    saveText (javaField, JavaPath)
     saveText (appClassField, AppClass)
   }
 
@@ -70,7 +68,7 @@ object Compiler extends BasicForm with Navigable {
       command ! io
     }
     results.log.text += "Started"
-    publish (HideApplication)
+    publish (ExitApplication)
   }
 }
 

@@ -9,5 +9,5 @@ object Schelper extends SchelperBase {
     def componentPublishers = Nil
     def linkName = "Hello Simon!"
     def linkColour = ActionColour }
-  def buttonList = List (Developer, helloWorld)
+  def buttonList = List (Developer, helloWorld, CitedToList)
 }

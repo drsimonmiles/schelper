@@ -3,7 +3,6 @@ package schelper.core
 import scala.swing.Color
 
 object SchelperConstants {
-  val ApplicationName = "Schelper"
   val MainWindowPosition = "MainWindowPosition"
   val SourcePaths = "SourcePaths"
   val SourceNames = "SourceNames"

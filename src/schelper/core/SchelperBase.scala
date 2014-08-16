@@ -7,7 +7,7 @@ import SchelperConstants._
 import scala.collection.mutable
 import scala.swing._
 import scala.swing.event._
-import settings4scala.Settings
+import schelper.core.SchelperPreferences._
 
 abstract class SchelperBase extends SimpleSwingApplication {
   UIManager.setLookAndFeel (UIManager.getCrossPlatformLookAndFeelClassName)
@@ -31,7 +31,7 @@ abstract class SchelperBase extends SimpleSwingApplication {
     frame = Some (this)
     title = "Schelper"
     navigate (homepage)
-    Settings.loadPosition (ApplicationName, MainWindowPosition, this)
+    loadPosition (MainWindowPosition, this)
     reactions += {
       case WindowClosing (_) => save ()
     }
@@ -46,7 +46,7 @@ abstract class SchelperBase extends SimpleSwingApplication {
   }
 
   private def save () {
-    if (frame.isDefined) Settings.savePosition (ApplicationName, MainWindowPosition, frame.get)
+    if (frame.isDefined) savePosition (MainWindowPosition, frame.get)
   }
 
   private def show (whole: BorderPanel) {
@@ -70,6 +70,6 @@ abstract class SchelperBase extends SimpleSwingApplication {
     case NavigateTo (destination) => navigate (destination)
     case PublisherAdded (publisher) => listenTo (publisher)
     case SavePosition => save ()
-    case HideApplication => System.exit (0)
+    case ExitApplication => System.exit (0)
   }
 }

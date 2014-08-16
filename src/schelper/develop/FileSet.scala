@@ -1,16 +1,16 @@
 package schelper.develop
 
 import java.io.File
-import schelper.core.SchelperConstants._
-import schelper.navigate.{Navigable, NavigationButton}
-import settings4scala.Settings._
+import java.io.File.pathSeparatorChar
+import schelper.navigate._
 import scala.swing.Publisher
+import schelper.core.SchelperPreferences._
 
 abstract class FileSet (val kind: String, val atomic: Boolean) extends Publisher {
-  var files: Map[String, File] = getList (ApplicationName, kind + "Names").zip (getFiles (ApplicationName, kind + "Paths")).toMap
+  var files: Map[String, String] = getList (kind + "Names", ';').zip (getList (kind + "Paths", pathSeparatorChar)).toMap
 
   def addFile (name: String, path: String) {
-    files += (name -> new File (path))
+    files += (name -> path)
     saveFileDetails ()
     publish (SourcesChanged)
   }
@@ -40,7 +40,7 @@ abstract class FileSet (val kind: String, val atomic: Boolean) extends Publisher
     files.map (s => new SourceRoot (s._1, s._2, atomic, this)).toList
 
   private def saveFileDetails () {
-    putList (ApplicationName, kind + "Names", files.keys.toList)
-    putFiles (ApplicationName, kind + "Paths", files.values.toList)
+    putList (kind + "Names", files.keys.toList, ';')
+    putList (kind + "Paths", files.values.toList, pathSeparatorChar)
   }
 }

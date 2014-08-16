@@ -2,7 +2,6 @@ package schelper.core
 
 import scala.swing.GridBagPanel.Fill
 import scala.swing._
-import schelper.core.SchelperConstants._
 
 class BasicForm extends GridBagPanel with SchelperScreen {
   private val constraint = new Constraints

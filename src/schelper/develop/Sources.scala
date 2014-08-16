@@ -1,6 +1,6 @@
 package schelper.develop
 
-import java.io.{PrintWriter, File}
+import java.io._
 import scala.io.Source.fromFile
 
 object Sources extends FileSet ("Source", false) {
@@ -14,7 +14,7 @@ object Sources extends FileSet ("Source", false) {
         else
           Nil
 
-    files.values.flatMap (allIn)
+    files.values.map (new File (_)).flatMap (allIn)
   }
 
   def allScalaPaths: Iterable[String] =
