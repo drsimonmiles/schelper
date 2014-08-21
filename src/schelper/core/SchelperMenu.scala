@@ -10,7 +10,7 @@ class SchelperMenu (private var _items: Seq[Navigable]) extends ScrollPane with 
   def componentPublishers = menu
   contents = constructMenu
 
-  def items = _items
+  def items: Seq[Navigable] = _items
 
   def items_= (newItems: Seq[Navigable]) {
     _items = newItems

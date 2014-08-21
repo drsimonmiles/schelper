@@ -1,3 +1,5 @@
+import java.awt.Toolkit
+import java.awt.datatransfer.DataFlavor.stringFlavor
 import java.io.{BufferedWriter, FileWriter, PrintWriter}
 import schelper.core.SchelperConstants._
 import schelper.core.SchelperPreferences._
@@ -34,6 +36,20 @@ object CitedToList extends BorderPanel with SchelperScreen with Navigable {
     pasteArea.text = ""
   }
 
+  override def opened () {
+    pasteCurrent ()
+  }
+
+  def pasteCurrent () {
+    val contents = Toolkit.getDefaultToolkit.getSystemClipboard.getContents (this)
+    if (contents != null && contents.isDataFlavorSupported (stringFlavor))
+      try {
+        pasteArea.text = contents.getTransferData (stringFlavor).toString
+      } catch {
+        case _: Throwable =>
+      }
+  }
+
   def processCites () {
     def collectCites (rows: List[String], matches: List[(String, String)] = Nil): List[(String, String)] = rows match {
       case Nil => matches
@@ -63,17 +79,3 @@ object CitedToList extends BorderPanel with SchelperScreen with Navigable {
     putString (ListPathSetting, listPath.text)
   }
 }
-
-/*
-[PDF] Database Queries that Explain their Work
-J Cheney, A Ahmed, UA Acar - arXiv preprint arXiv:1408.1675, 2014
-Abstract: Provenance for database queries or scientific workflows is often motivated as
-providing explanation, increasing understanding of the underlying data sources and
-processes used to compute the query, and reproducibility, the capability to recompute the ...
-
-The D-NET Software Toolkit: A Framework for the Realization, Maintenance, and Operation of Aggregative Infrastructures
-P Manghi, M Artini, C Atzori, A Bardi, A Mannocci… - Program: electronic library …, 2014
-Purpose-This paper presents the architectural principles and the services of the D-NET
-Software Toolkit. D-NET is a framework where designers and developers find the tools for
-constructing and operating aggregative infrastructures (systems for aggregating data ...
- */

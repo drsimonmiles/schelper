@@ -6,6 +6,8 @@ import schelper.navigate._
 import scala.swing.Publisher
 import schelper.core.SchelperPreferences._
 
+import scala.util.Try
+
 abstract class FileSet (val kind: String, val atomic: Boolean) extends Publisher {
   var files: Map[String, String] = getList (kind + "Names", ';').zip (getList (kind + "Paths", pathSeparatorChar)).toMap
 
@@ -16,7 +18,7 @@ abstract class FileSet (val kind: String, val atomic: Boolean) extends Publisher
   }
 
   def contentsToScreens (directory: File): Seq[Navigable] =
-    if (!atomic && directory.isDirectory) directory.listFiles.map (fileToScreen) else Nil
+    if (!atomic && directory.isDirectory) directory.listFiles.flatMap (file => Try (fileToScreen (file)).toOption) else Nil
 
   def createSubdirectory (parent: File, name: String): File = {
     val child = new File (parent, name)

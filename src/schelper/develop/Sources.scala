@@ -31,10 +31,14 @@ object Sources extends FileSet ("Source", false) {
     new SourceEditor (file)
 
   def openSourceFile (file: File) = {
-    val source = fromFile (file)
-    val lines = source.mkString
-    source.close ()
-    lines
+    try {
+      val source = fromFile (file)
+      val lines = source.mkString
+      source.close ()
+      lines
+    } catch {
+      case problem: Throwable => throw UnopenableSourceException
+    }
   }
 
   def saveSourceFile (file: File, text: String) {

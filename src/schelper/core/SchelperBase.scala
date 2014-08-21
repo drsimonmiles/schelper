@@ -25,6 +25,7 @@ abstract class SchelperBase extends SimpleSwingApplication {
       created
     }
     show (recorded (pageCache.getOrElse (screen, createPage)))
+    screen.opened ()
   }
 
   def top = new MainFrame {
