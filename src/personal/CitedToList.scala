@@ -1,34 +1,26 @@
 import java.awt.Toolkit
 import java.awt.datatransfer.DataFlavor.stringFlavor
 import java.io.{BufferedWriter, FileWriter, PrintWriter}
-import schelper.core.SchelperConstants._
-import schelper.core.SchelperPreferences._
+import schelper.core.SchelperConstants.{ActionColour, NavigateColour}
+import schelper.core.SchelperPreferences.getString
 import schelper.core.SchelperScreen
-import schelper.navigate._
-import scala.swing._
-import scala.swing.BorderPanel.Position._
+import schelper.navigate.{BackButton, Navigable}
+import scala.swing.{TextArea, ScrollPane, FlowPanel, BorderPanel}
+import scala.swing.BorderPanel.Position.{Center, South}
 
 object CitedToList extends BorderPanel with SchelperScreen with Navigable {
   val linkName = "Add citations to list"
   val linkColour = ActionColour
-  val ListPathSetting = "ListPath"
-  val listPath = new TextField (getString (ListPathSetting).getOrElse (""))
-  val saveButton = new SideEffectButton ("Save", () => save (), ActionColour)
-  val pathPanel = new BorderPanel {
-    layout (new Label ("List path")) = West
-    layout (listPath) = Center
-
-  }
+  val ListPathPreference = "ListPath"
   val pasteArea = new TextArea ("")
-  val addButton = new BackButton ("Add cites", () => { save (); processCites (); clear () }, ActionColour)
+  val addButton = new BackButton ("Add cites", () => { processCites (); clear () }, ActionColour)
   val cancelButton = new BackButton ("Cancel", () => clear (), NavigateColour)
   val buttonPane = new FlowPanel {
     contents += addButton
     contents += cancelButton
   }
-  val componentPublishers = List (saveButton, addButton, cancelButton)
+  val componentPublishers = List (addButton, cancelButton)
 
-  layout (pathPanel) = North
   layout (new ScrollPane (pasteArea)) = Center
   layout (buttonPane) = South
 
@@ -62,20 +54,19 @@ object CitedToList extends BorderPanel with SchelperScreen with Navigable {
     def ignoreAbstract (rows: List[String]): List[String] =
       rows.dropWhile (!_.isEmpty).dropWhile (_.isEmpty)
 
-    val cites = collectCites (pasteArea.text.split ('\n').map (_.trim).dropWhile (_.isEmpty).toList)
-    val out = new PrintWriter (new BufferedWriter (new FileWriter (listPath.text, true)))
-    try {
-      cites.foreach { cite =>
-        out.println (cite._1)
-        out.println (cite._2)
-        out.println ()
+    val path = getString (ListPathPreference)
+    if (path.isDefined) {
+      val out = new PrintWriter (new BufferedWriter (new FileWriter (path.get, true)))
+      val cites = collectCites (pasteArea.text.split ('\n').map (_.trim).dropWhile (_.isEmpty).toList)
+      try {
+        cites.foreach { cite =>
+          out.println (cite._1)
+          out.println (cite._2)
+          out.println ()
+        }
+      } finally {
+        out.close ()
       }
-    } finally {
-      out.close ()
     }
-  }
-
-  def save () {
-    putString (ListPathSetting, listPath.text)
   }
 }
