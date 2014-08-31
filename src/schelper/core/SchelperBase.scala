@@ -24,8 +24,12 @@ abstract class SchelperBase extends SimpleSwingApplication {
       pageCache += (screen -> created)
       created
     }
-    show (recorded (pageCache.getOrElse (screen, createPage)))
-    screen.opened ()
+    try {
+      show (recorded (pageCache.getOrElse (screen, createPage)))
+      screen.opened ()
+    } catch {
+      case _: Throwable => navigate (ErrorScreen)
+    }
   }
 
   def top = new MainFrame {

@@ -5,7 +5,6 @@ import java.io.File.pathSeparatorChar
 import schelper.navigate._
 import scala.swing.Publisher
 import schelper.core.SchelperPreferences._
-
 import scala.util.Try
 
 abstract class FileSet (val kind: String, val atomic: Boolean) extends Publisher {

@@ -1,7 +1,9 @@
 package schelper.develop
 
 import java.io._
-import scala.io.Source.fromFile
+import schelper.core.SchelperConstants.SourceColour
+import schelper.core.TextFileEditor
+import schelper.core.TextFiles._
 
 object Sources extends FileSet ("Source", false) {
   def allScalaFiles: Iterable[File] = {
@@ -21,32 +23,21 @@ object Sources extends FileSet ("Source", false) {
     allScalaFiles.map (_.getAbsolutePath)
 
   def createSourceFile (parent: File, name: String): File = {
-    val child = new File (parent, name)
-    saveSourceFile (child, "")
+    val file = createTextFile (parent, name, "")
     publish (new DirectoryChanged (parent))
-    child
+    file
   }
 
   def nonDirectoryToScreen (file: File) =
-    new SourceEditor (file)
+    new TextFileEditor (file, file.getName, SourceColour)
 
-  def openSourceFile (file: File) = {
-    try {
-      val source = fromFile (file)
-      val lines = source.mkString
-      source.close ()
-      lines
-    } catch {
-      case problem: Throwable => throw UnopenableSourceException
-    }
+  def openSourceFile (file: File): String = try {
+    openTextFile (file)
+  } catch {
+    case _: Throwable => throw UnopenableSourceException
   }
 
   def saveSourceFile (file: File, text: String) {
-    val out = new PrintWriter (file)
-    try {
-      out.print (text)
-    } finally {
-      out.close ()
-    }
+    saveTextFile (file, text)
   }
 }

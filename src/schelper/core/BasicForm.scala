@@ -8,7 +8,7 @@ class BasicForm extends GridBagPanel with SchelperScreen {
   private var row = 0
   private var fields = List[Component] ()
 
-  def button (aButton: Button) = {
+  def button (aButton: Button): Button = {
     constraint.gridy = row
     constraint.gridx = 0
     constraint.gridwidth = 2
@@ -18,7 +18,7 @@ class BasicForm extends GridBagPanel with SchelperScreen {
     aButton
   }
 
-  def checkbox (label: String, value: Boolean) = {
+  def checkbox (label: String, value: Boolean): CheckBox = {
     val entry = new CheckBox (label)
     entry.selected = value
     constraint.gridy = row
@@ -30,7 +30,7 @@ class BasicForm extends GridBagPanel with SchelperScreen {
     entry
   }
 
-  def field (label: String, value: String) = {
+  def field (label: String, value: String): TextField = {
     val entry = new TextField (value)
     constraint.gridy = row
     constraint.gridx = 0
