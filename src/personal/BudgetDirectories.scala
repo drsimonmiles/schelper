@@ -10,7 +10,8 @@ object BudgetDirectories extends PreferencesList (Map (
   "CCSYACR" -> "CCSYACRDirectory",
   "MHFYAKR" -> "MHFYAKRDirectory",
   "MHFLBAR" -> "MHFLBARDirectory",
-  "MHFRBGR" -> "MHFRBGRDirectory"
+  "MHFRBGR" -> "MHFRBGRDirectory",
+  "CCSWAJR" -> "CCSWAJRDirectory"
 )) with Navigable {
   val linkName = "Set budget directories"
   val linkColour = ActionColour
