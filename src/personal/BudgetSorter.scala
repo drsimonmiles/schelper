@@ -29,7 +29,7 @@ object BudgetSorter extends BorderPanel with SchelperScreen with Navigable {
     contents += cancelButton
   }
   val componentPublishers: Iterable[Publisher] = Seq(dirsButton, cancelButton)
-  def typed = if (group.selected == Some (totalsButton)) " Latest totals.xls" else " Latest transactions.xls"
+  def typed = if (group.selected.contains (totalsButton)) " Latest totals.xls" else " Latest transactions.xls"
 
   peer.setTransferHandler (new TransferHandler {
     override def canImport (support: TransferSupport) = true
